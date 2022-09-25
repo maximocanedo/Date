@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1664145671 source:f:\desktop\proyectos\fechas\main.cpp
+	<iostream>
+	<cstdlib>
+	<cstring>
+	<vector>
+	<cstdio>
+	<locale.h>
+	<time.h>
+	<sstream>
+	"errores.h"
+	"Fecha.h"
+	"Menu.h"
+
+1664145324 f:\desktop\proyectos\fechas\fecha.h
+
+1663374670 f:\desktop\proyectos\fechas\menu.h
+
+1663375830 f:\desktop\proyectos\fechas\errores.h
+
