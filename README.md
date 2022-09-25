@@ -10,6 +10,9 @@ Se puede crear un objeto Date de tres formas:
   * Con un número de serie, que son los días que pasaron desde el martes 1 de enero del año 9 D.C.
  ```cpp
     Date miFecha(728611) // Establece la fecha en el 12 de noviembre de 2003 00:00
-    Date miFechaConHora(728611, 82200000) // 12-nov-2003 22:50:00.000
+    Date miFechaConHora(728611, 82200000); // 12-nov-2003 22:50:00.000
  ```
- 
+  * Pasando 'true' o 'false' como parámetro establece la fecha actual.
+```cpp
+   Date fechaActual(true); // 25-9-2022 20:45:38.000
+```
