@@ -30,3 +30,40 @@ Se puede crear un objeto Date de tres formas:
    Date miFecha(12,11,2003);
    miFecha.getMonth(); // 11
 ```
+### Date.getYear()
+ Devuelve los dos últimos dígitos del año, como un entero entre 0 y 99.
+ ```cpp
+   Date miFecha(12,11,2013);
+   miFecha.getYear(); // 13
+```
+### Date.getFullYear()
+ Devuelve el año completo, como un entero.
+ ```cpp
+   Date miFecha(12,11,2003);
+   miFecha.getFullYear(); // 2003
+```
+### Date.getDay()
+ Devuelve el día de semana, como un entero entre 0 (Domingo) y 6 (Sábado)
+ ```cpp
+   Date miFecha(12,11,2003);
+   miFecha.getDay(); // 3
+```
+### Date.getHours()
+ Devuelve la hora, como un entero entre 0 y 23.
+ ```cpp
+   Date miFecha(12,11,2003,22,50);
+   miFecha.getHours(); // 22
+```
+### Date.getMinutes()
+ Devuelve los minutos, como un entero entre 0 y 59.
+ ```cpp
+   Date miFecha(12,11,2003,22,50);
+   miFecha.getMinutes(); // 50
+```
+### Date.getSeconds()
+ Devuelve los segundos, como un entero entre 0 y 59.
+ ```cpp
+   Date miFecha(12,11,2003,22,50);
+   miFecha.getSeconds(); // 50
+```
+
