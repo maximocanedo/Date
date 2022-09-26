@@ -124,9 +124,60 @@ Se puede crear un objeto Date de tres formas:
  Cambia el año. Recibe como parámetro un entero.
  ```cpp
    Date miFecha(1,1,2023); // Dom 1 ene 2023
-   miFecha.setYear(24); // Lun 1 ene 2023
+   miFecha.setYear(24); // Lun 1 ene 2024
  ```
-   
+### setFullYear(int)
+ Cambia el año. Recibe como parámetro un entero.
+ ```cpp
+   Date miFecha(1,1,2023); // Dom 1 ene 2023
+   miFecha.setFullYear(2024); // Lun 1 ene 2024
+```
+### setHours(int)
+ Cambia la hora. Recibe como parámetro un entero.
+```cpp
+  Date miFecha(1,1,2023, 10,30,25,0); // Dom 1 ene 2023 10:30:25.000
+  miFecha.setHours(20); // Dom 1 ene 2023 20:30:25.000
+  miFecha.setHours(25); // Lun 2 ene 2023 01:30:25.000
+```
+### setMinutes(int)
+ Cambia los minutos. Recibe como parámetro un entero.
+```cpp
+  Date miFecha(1,1,2023, 10,30,25,0); // Dom 1 ene 2023 10:30:25.000
+  miFecha.setMinutes(20); // Dom 1 ene 2023 10:20:25.000
+```
+### setSeconds(int)
+ Cambia los segundos. Recibe como parámetro un entero.
+```cpp
+  Date miFecha(1,1,2023, 10,30,25,0); // Dom 1 ene 2023 10:30:25.000
+  miFecha.setSeconds(50); // Dom 1 ene 2023 10:30:50.000
+  miFecha.setSeconds(70); // Dom 1 ene 2023 10:31:10.000
+```
+### setMilliseconds(int)
+ Cambia los milisegundos. Recibe como parámetro un entero.
+```cpp
+  Date mi Fecha(1,1,2023, 10,30,25,10); // Dom 1 ene 2023 10:30:25.010
+  miFecha.setMilliseconds(150); // Dom 1 ene 2023 10:30:25.150
+  miFecha.setMilliseconds(1100); // Dom 1 ene 2023 10:30:26.100
+```
+### happensBefore(Date)
+ Recibe una fecha como parámetro y devuelve 'true' si la fecha recibida es anterior a la fecha del objeto, o 'false' si no lo es.
+```cpp
+  Date miFecha(12,11,2003); // Mié 12 nov 2003
+  Date otraFecha(10,11,2003); // Lun 10 nov 2003
+  miFecha.happensBefore(otraFecha); // false
+  otraFecha.happensBefore(miFecha); // true
+```
+### happensAfter(Date)
+ Recibe una fecha como parámetro y devuelve 'true' si la fecha recibida es anterior a la fecha del objeto, o 'false' si no lo es.
+```cpp
+  Date miFecha(12,11,2003); // Mié 12 nov 2003
+  Date otraFecha(10,11,2003); // Lun 10 nov 2003
+  miFecha.happensAfter(otraFecha); // true
+  otraFecha.happensAfter(miFecha); // false
+```
+
+
+
    
    
    
