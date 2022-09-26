@@ -106,5 +106,27 @@ Se puede crear un objeto Date de tres formas:
    miFecha.getDayName(true, true, 1); // "Miércoles"
    miFecha.getDayName(false, true, 0); // "Wed"
 ```
-
-
+### setDate(int)
+ Cambia el día. Recibe como parámetro un entero.
+ ```cpp
+   Date miFecha(25,9,2022); // Dom 25 sep 2022
+   miFecha.setDate(28); // Mié 28 sep 2022
+   miFecha.setDate(33); // Lun 3 oct 2022
+ ```
+### setMonth(int)
+ Cambia el mes. Recibe como parámetro un entero.
+```cpp
+   Date miFecha(25,9,2022); // Dom 25 sep 2022
+   miFecha.setMonth(11); // Vie 25 nov 2022
+   miFecha.setMonth(15); // Sáb 25 mar 2023
+```
+### setYear(int)
+ Cambia el año. Recibe como parámetro un entero.
+ ```cpp
+   Date miFecha(1,1,2023); // Dom 1 ene 2023
+   miFecha.setYear(24); // Lun 1 ene 2023
+ ```
+   
+   
+   
+   
