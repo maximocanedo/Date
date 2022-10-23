@@ -6,6 +6,7 @@
 #include <locale.h>
 #include <time.h>
 #include <sstream>
+#include <windows.h>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ int fechaDesdeSerie() {
 int serieDesdeFecha() {
     cout<<"Ingrese datos de la fecha: ";
     Date i(0,0);
-    i.load();
+    i.load(true);
     cout<<endl;
     cout<<"Datos de la fecha: "<<endl;
     i.print(Date().SP_FULL);
@@ -61,18 +62,34 @@ int sumarDiasAFecha() {
 /*
  */
 int fa() {
+    while(true) {
+        Date f(true);
+        cout<<"\n\tHoy es: ";
+        f.print(Date().SP_FULL, true, true);
+        cout<<"\n\n"<<endl;
+        cout.flush();
+        Sleep(800);
+        system("cls");
+        system("@echo off");
+    }
+    return 0;
+}
+int fab() {
     Date f(true);
-    cout<<"\n\tHoy es: ";
-    f.print(Date().SP_FULL);
-    cout<<endl<<endl;
-    cout<<"\tDía: "<<f.getDate()<<". "<<endl;
-    cout<<"\tDía de semana: "<<f.getDayName(true, true, 1)<<" ("<<f.getDay()<<"). "<<endl;
-    cout<<"\tMes: "<<f.getMonthName(true, true, 1)<<" ("<<f.getMonth()<<"). "<<endl;
-    cout<<"\tAño (2 dígitos): "<<f.getYear()<<". "<<endl;
-    cout<<"\tAño (4 dígitos): "<<f.getFullYear()<<". "<<endl;
-    cout<<"\tHora: "<<f.getHours()<<". "<<endl;
-    cout<<"\tMinutos: "<<f.getMinutes()<<". "<<endl;
-    cout<<"\tSegundos: "<<f.getSeconds()<<". "<<endl;
+    cout<<"Ingrese la fecha y hora de inicio: "<<endl;
+    f.load(true);
+    cout<<endl<<"Se comenzará a contar desde el: ";
+    f.print(f.SP_FULL, true, true);cout<<endl;
+    system("pause");
+    while(true) {
+        f.addMilliseconds(1000);
+        cout<<"\n\t";
+        f.print(Date().SP_FULL, true, true);
+        cout<<"\n\n"<<endl;
+        cout.flush();
+        Sleep(900);
+        system("cls");
+    }
     return 0;
 }
 /**/
@@ -101,9 +118,11 @@ int verZonasHorarias() {
     int hba = bsas.getHours();
     utc.copyFrom(bsas);
     utc.setHours(hba + 3);
+
     int UTC = utc.getHours();
     sf.copyFrom(bsas);
     sf.setHours(UTC - 7);
+
     cout<<endl<<"San Francisco, CA, Estados Unidos [UTC-7]: \n\t"; sf.print(7); cout<<endl;
 
     cout<<endl<<"> Buenos Aires, Argentina [UTC-3]: \n\t"; bsas.print(7); cout<<endl;
@@ -128,33 +147,37 @@ int verZonasHorarias() {
     cout<<endl;
     return 1;
 }
+int exitProgram() {
+    exit(0);
+    return 0;
+}
 
 int main() {
     setlocale(LC_ALL, "");
-    Item opciones[10] = {
-        Item{1, "Documentación de Date", documentacion},
+    Date a, b;
+    a = 728611.822;
+    b = 728000.822;
+    a.print();cout<<endl;
+    b.print();
+    if(a < b) cout<<endl<<"A SUCEDIÓ DESPUÉS. "<<endl;
+    cout<<endl;
+    system("pause");
+    const int o = 10;
+    Item opciones[o] = {
         Item{2, "Obtener fecha desde número de serie", fechaDesdeSerie},
         Item{3, "Obtener número de serie desde una fecha dada", serieDesdeFecha},
         Item{4, "Restar días a una fecha dada", restarDiasAFecha},
         Item{5, "Sumar días a una fecha dada", sumarDiasAFecha},
-        Item{6, "Obtener fecha actual", fa},
+        Item{6, "Obtener fecha y hora actuales", fa},
+        Item{60, "Contar desde una fecha y hora determinadas", fab},
         Item{7, "Ver fecha en diferentes formatos", verFechaEnDiferentesFormas},
         Item{8, "Convertir hora de Buenos Aires a cinco zonas horarias", verZonasHorarias},
         Item{-1, ""},
-        Item{0, "Salir del programa"}
+        Item{0, "Salir del programa", exitProgram}
     };
 
-    Menu menuPrincipal("Fechas", 1, opciones, 10);
-
-    while(true) {
-        system("cls");
-        menuPrincipal.write();
-        int c = UserChoose();
-        if(c != 0) menuPrincipal.exec(c);
-        else return 0;
-
-        system("pause");
-    }
+    Menu menuPrincipal("Fechas", 1, opciones, o);
+    menuPrincipal.graph();
 
     cout<<endl;
     system("pause");

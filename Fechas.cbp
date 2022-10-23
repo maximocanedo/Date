@@ -35,6 +35,7 @@
 		<Unit filename="Fecha.h" />
 		<Unit filename="Menu.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mas.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

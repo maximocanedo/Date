@@ -1,15 +1,10 @@
 /*
  * Máximo Canedo
  *
- * Clase Date versión 3.1.
- *
- * Novedades:
- * - Date.happensBefore(Date) y Date.happensAfter(Date) reciben una fecha e informan si sucedió antes o después.
- * - Se puede añadir días, meses, años, horas, minutos y segundos de forma directa en el objeto. P.ej. miFecha.addDays(int);
+ * Clase Date versión 3.2
  *
  * Limitaciones:
- * - Los métodos que restan meses, años, horas, minutos y segundos de forma directa (P.ej. miFecha.subtractMonths(int)) por
- * el momento no funcionan muy bien. Se sugiere evitar su uso.
+ * - Solucionadas
  *
  */
 #ifndef FECHA_H_INCLUDED
@@ -25,11 +20,11 @@ protected:
       , hours = 0
       , minutes = 0
       , seconds = 0
-      , milliseconds = 0;
-    int fullSerial = 0;
-    int serialTime = 0;
+      , milliseconds = 0
+      , fullSerial = 0
+      , serialTime = 0;
 
-public:
+public: // ENUM ?
     /* Constantes */
     const char MONTH[5][2][2][12][24] = {
         { // Latín (Calendario Juliano)
@@ -166,7 +161,7 @@ public:
     int getSerialTime() {return serialTime;}            // Devuelve los segundos que pasaron desde la medianoche.
     const char * getMonthName(bool lng = false, bool capitalize = false, int lang = 1) {
         int finalFullYear = (fullYear), finalMonth = (month), finalDate = (date);
-        bool calendarioJuliano = (finalFullYear < 1582 || finalFullYear == 1582 && month < 10 || finalFullYear == 1582 && finalMonth == 10 && finalDate <= 4);
+        bool calendarioJuliano = ((finalFullYear < 1582) || (finalFullYear == 1582 && month < 10) || (finalFullYear == 1582 && finalMonth == 10 && finalDate <= 4));
         return MONTH[calendarioJuliano ? 0 : lang + 1][lng ? 1 : 0][capitalize ? 0 : 1][finalMonth - 1];
         // MONTH[lang][short/long][capitalize?][months]
     }
@@ -219,6 +214,7 @@ public:
         setSerialFromTime(hours, minutes, seconds, ms);
     }
 
+    /* Add's */
     void addDays(int d) {
         setFromSerial(fullSerial + d);
     }
@@ -241,6 +237,7 @@ public:
         setSerialFromTime(hours, minutes, seconds, milliseconds + ms);
     }
 
+    /* Subtract's */
     void subtractDays(int d) {
         setFromSerial(fullSerial - d);
     }
@@ -263,7 +260,7 @@ public:
         setSerialFromTime(hours, minutes, seconds, milliseconds - ms);
     }
 
-
+    /* Más sets */
     void setSerial(int s) {
         setFromSerial(s);
     }
@@ -276,27 +273,26 @@ public:
         date = 1; day = 2; month = 1; fullYear = 9;
         // Empezamos a contar día por día, hasta llegar al número de serie que recibimos.
         for(int i = 1; i < serie; i++) {
-            bool calendarioJuliano = (fullYear < 1582 || fullYear == 1582 && month < 10 || fullYear == 1582 && month == 10 && date < 4);
+            bool calendarioJuliano = ((fullYear < 1582) || (fullYear == 1582 && month < 10) || (fullYear == 1582 && month == 10 && date < 4));
             // Para las fechas anteriores al 4/10/1582 contamos los días según el calendario juliano.
             if(calendarioJuliano) {
                 // En el calendario juliano, son bisiestos todos los años divisibles por 4.
                 bool esBisiesto = (fullYear % 4 == 0);
                 int diasPorMesJuliano[13] = {0, 31, (esBisiesto ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-                // Contamos los días y los días semanales.
-                date++;
-                day++; if(day == 7) day = 0;
-                // Cuando llegamos al último día de cada mes...
                 if(date == diasPorMesJuliano[month]) {
-                    // Restablecemos el contador de días,
+                    // Restablecemos el contador de días
                     date = 0;
-                    // Y si encima era el 31 de diciembre...
+                    // Y si se trata del 31 de diciembre,
                     if(month == 12) {
-                        // Restablecemos también el mes y contamos otro año.
+                        // Restablecemos el contador de meses y contamos un año más.
                         month = 1;
                         fullYear++;
-                        // Si no, simplemente contamos otro mes.
+                        // Si no, simplemente contamos un mes más.
                     } else month++;
                 }
+                // Contamos días...
+                date++;
+                day++; if(day == 7) day = 0;
             } // Fin calendario juliano
             else {
                 /* El jueves 4 de octubre del 1582 España, Italia, Francia y Portugal
@@ -309,7 +305,7 @@ public:
                 }
             }
             // A partir del 15/10/1582 contamos usando el calendario gregoriano.
-            bool calendarioGregoriano = (fullYear > 1582 || fullYear == 1582 && month > 10 || fullYear == 1582 && month == 10 && date >= 14);
+            bool calendarioGregoriano = ((fullYear > 1582) || (fullYear == 1582 && month > 10) || (fullYear == 1582 && month == 10 && date >= 14));
             if(calendarioGregoriano) {
                 // En el calendario gregoriano son bisiestos
                 // Los años divisibles por 4, salvo los que sean divisibles por 100 pero no por 400.
@@ -336,12 +332,21 @@ public:
     }
     void setFromDate(int d = 1, int m = 1, int y = 9) {
         // Si recibimos un mes mayor a 12, lo dividimos.
+        int serialesAQuitar = 0;
         if(m > 12) {
             y += m / 12; // El cociente se lo sumamos al año,
             m = m % 12; // De forma que nos queden menos de 12 meses.
         }
-        if(d < 1) d = 1;
-        if(m < 1) m = 1;
+        if(d < 1) { // Si recibimos un día negativo, lo restamos a la serial final
+            serialesAQuitar += abs(d);
+        }
+        if(m < 1) { // Si recibimos un mes negativo, dividimos su valor absoluto por 12
+            int mes_ab = abs(m);
+            y -= mes_ab / 12;
+            int fme = mes_ab % 12;
+            y--;
+            m = 12 - fme;
+        }
         int preserial = 0; // Esta variable contará los días.
 
         // Comenzamos contando los años desde el 9 D.C.
@@ -371,6 +376,7 @@ public:
             // Sumamos una serial más.
             preserial++;
         }
+        preserial -= serialesAQuitar;
         setFromSerial(preserial);
     }
     void setTimeFromSerial(int s = 1) {
@@ -402,50 +408,58 @@ public:
     }
     void setSerialFromTime(int h = 0, int m = 0, int s = 0, int ms = 0) {
         if(ms < 0) {
-            int msabs = abs(ms + 0);
-            int segundos_de_menos = msabs / 60;
-            ms = 1000 - msabs % 60;
-            s -= segundos_de_menos;
+            int msabs = abs(ms + 0);                // Obtenemos el valor absoluto.
+            int segundos_de_menos = msabs / 1000;   // Restamos un segundo mínimo más un segundo por cada 1000 ms del valor absoluto.
+            ms = 1000 - msabs % 1000;               // El resto de la división se lo restamos a 1000 y asignamos el resultado a 'ms'.
+            s -= segundos_de_menos;                 // Le restamos los milisegundos necesarios a la hora.
         }
         if(s < 0) {
-            int sabs = abs(s + 0);
-            int minutos_de_menos = sabs / 60;
-            s = 60 - sabs % 60;
-            m -= minutos_de_menos;
+            int segundos = abs(s + 0);              // Obtenemos el valor absoluto.
+            int minutos_de_menos = 1- segundos / 60;// Restamos un minuto mínimo más un minuto por cada 60 segundos del valor absoluto.
+            s = 60 - segundos % 60;                 // El resto de la división se lo restamos a 60 y asignamos el resultado a 's'.
+            m -= minutos_de_menos;                  // Le restamos los minutos necesarios a la hora.
         }
         if(m < 0) {
-            int mabs = abs(m + 0);
-            int horas_de_menos = mabs / 60;
-            m = 60 - mabs % 60;
-            h -= horas_de_menos;
+            int minutos = abs(m + 0);               // Obtenemos el valor absoluto.
+            int horas_de_menos = 1 + minutos / 60;  // Restamos una hora mínimo más una hora por cada 60 minutos del valor absoluto.
+            m = 60 - minutos % 60;                  // El resto de la división se lo restamos a 60 y asignamos el resultado a 'm'.
+            h -= horas_de_menos;                    // Le restamos las horas necesarias a 'h'.
         }
         if(h < 0) {
-            int habs = abs(h + 0);
-            int dias_de_menos = 1 + habs / 24;
-            h = 24 - habs % 24;
-            setSerial(getSerial() - dias_de_menos);
+            int horas = abs(h + 0);                 // Obtenemos el valor absoluto .
+            int dias_de_menos = 1 + horas / 24;     // Restamos un día mínimo más un día por cada 24 horas del valor absoluto.
+            h = 24 - horas % 24;                    // El resto de la división se lo restamos a 24 y asignamos la diferencia a 'h'.
+            setSerial(getSerial() - dias_de_menos); // Le restamos un día a la fecha.
         }
-        setTimeFromSerial(ms + s * 1000 + m * 60000 + h * 60 * 60000);
+        int preserial = ms + s * 1000 + m * 60000 + h * 60 * 60000;
+        /* No nos fijamos si los valores son mayores (Hora > 23, p.ej.),
+           Porque al mandar la 'preserial' a setTimeFromSerial() este lo acomoda. */
+        setTimeFromSerial(preserial); // Lo mandamos a procesar.
     }
 
-    bool happensBefore(Date e) {
-        int sd1 = e.getSerial()
-          , sh1 = e.getSerialTime()
-          , sd0 = getSerial()
-          , sh0 = getSerialTime();
-        bool h = (sd0 == sd1 && sh0 < sh1 || sd0 < sd1);
+    /* Comparadores */
+    bool happensBefore(Date e) { // Recibe una fecha como parámetro y devuelve true si la fecha del objeto es anterior a la fecha del parámetro, o false si no lo es.
+        int serial1 = e.getSerial()
+          , hora1 = e.getSerialTime()
+          , estaSerial = getSerial()
+          , estaHora = getSerialTime();
+        bool sucedioAntes = ((estaSerial == serial1 && estaHora < hora1) || (estaSerial < serial1));
+        return sucedioAntes;
+    }
+    bool happensAfter(Date e) { // Recibe una fecha como parámetro y devuelve true si la fecha del objeto es posterior a la fecha del parámetro, o false si no lo es.
+        int serial1 = e.getSerial()
+          , hora1 = e.getSerialTime()
+          , estaSerial = getSerial()
+          , estaHora = getSerialTime();
+        bool h = ((estaSerial == serial1 && estaHora > hora1) || (estaSerial > serial1));
         return h;
     }
-    bool happensAfter(Date e) {
-        int sd1 = e.getSerial()
-          , sh1 = e.getSerialTime()
-          , sd0 = getSerial()
-          , sh0 = getSerialTime();
-        bool h = (sd0 == sd1 && sh0 > sh1 || sd0 > sd1);
-        return h;
+    bool happensBetween(Date f1, Date f2) { // Recibe dos fechas como parámetros y devuelve true si la fecha del objeto sucede entre las fechas dadas, o false si no.
+        return ((happensAfter(f1) && happensBefore(f2)) || (happensBefore(f1) && happensAfter(f2)));
     }
 
-    void now() {
+    /* A partir de la fecha actual */
+    void now() {        // Rellena el objeto con los valores de la fecha y hora actuales (Del sistema).
         time_t t = time(NULL);
         struct tm tiempoLocal = *localtime(&t);
 
@@ -462,15 +476,17 @@ public:
         setFromDate(dd, mt, aa);
         setSerialFromTime(hh, mm, ss, ms);
     }
-    void yesterday() {
+    void yesterday() {  // Rellena el objeto con los valores de la fecha de ayer (En base a la fecha del sistema).
         now();
         subtractDays(1);
     }
-    void tomorrow() {
+    void tomorrow() {   // Rellena el objeto con los valores de la fecha de mañana (En base a la fecha del sistema).
         now();
         addDays(1);
     }
-    void print(int sets = 2, bool showTime = true, bool showSeconds = true) {
+
+    /* Imprimir en pantalla y cargar fecha manualmente */
+    void print(int sets = 2, bool showTime = true, bool showSeconds = true) { // Imprime en la pantalla la fecha (y opcionalmente la hora) según la configuración dada.
         int finalFullYear = fullYear
           , finalMonth = month
           , finalDate = date;
@@ -546,10 +562,8 @@ public:
         if(showTime) cout<<" "<<(hours < 10 ? "0" : "")<<(hours)<<":"<<(minutes < 10 ? "0" : "")<<(minutes);
         if(showTime && showSeconds) cout<<":"<<((seconds) < 10 ? "0" : "")<<(seconds);
 
-        bool calendarioJuliano = (fullYear < 1582 || fullYear == 1582 && month < 10 || fullYear == 1582 && month == 10 && date <= 4);
-
     }
-    void load(bool conHora = false) {
+    void load(bool conHora = false) { // Rellena el objeto con datos que le va pidiendo al usuario.
         int dia, mes, any, hora, mins, segundos;
         cout<<"Ingrese día: "; cin>>dia;
         cout<<"Ingrese mes: "; cin>>mes;
@@ -568,46 +582,49 @@ public:
     }
 
     /* Constructores */
+    Date() {} // Constructor vacío que no pide parámetros.
     Date(int serial, int serialHours = 0) { // Constructor a partir de seriales
         setFromSerial(serial);
         setTimeFromSerial(serialHours);
     }
-    Date(int d, int m, int y, int hh = 0, int mm = 0, int ss = 0, int ms = 0) { // Constructor a partir de fecha
+    Date(int d, int m, int y, int hh = 0, int mm = 0, int ss = 0, int ms = 0) { // Constructor a partir de una fecha.
         setFromDate(d, m, y);
         setSerialFromTime(hh, mm, ss, ms);
     }
-    Date(bool useLocalTime = true) { // Constructor que devuelve la fecha y hora actuales.
+    Date(bool useLocalTime) { // Constructor que recibe un booleano, e, independientemente de su valor rellena el objeto con la fecha y hora actuales. (Del sistema).
         now();
     }
 
     /* Destructor */
     ~Date() {}
 
+    /* Sobrecarga de operaciones [EXPERIMENTAL] */
+    void operator=(double s) {
+        setFromSerial((int) s);
+        float e = (s - (int) s);
+        float g = (e * 100000000);
+        setTimeFromSerial(g);
+    }
+    bool operator>(Date aux) {
+        return happensAfter(aux);
+    }
+    bool operator<(Date aux) {
+        return happensBefore(aux);
+    }
+
 };
+
+
+
+
+
+
 
 int documentacion() {
     cout<<"DOCUMENTACIÓN"<<endl<<endl;
     cout<<"La clase Date permite almacenar y trabajar con fechas y horas desde el 1 de enero del año 9 D.C. 00:00hs."<<endl<<endl;
-    cout<<"\tDate myDate(true);\n";
-    cout<<"\t-Crea un objeto de tipo Date, con los datos de la fecha actual.\n\n";
-    cout<<"\tDate myDate;\n";
-    cout<<"\t-Crea un objeto de tipo Date, pero con los valores por defecto (1/1/9 D.C. 00:00hs). \n\n";
-    cout<<"\tint Date.getHours();\n";
-    cout<<"\t-Devuelve un entero entre 0 y 23.\n\n";
-    cout<<"\tint Date.getMinutes();\n";
-    cout<<"\t-Devuelve un entero entre 0 y 59.\n\n";
-    cout<<"\tint Date.getSeconds();\n";
-    cout<<"\t-Devuelve un entero entre 0 y 59.\n\n";
-    cout<<"\tint Date.getDate();\n";
-    cout<<"\t-Devuelve un entero entre 1 y 31.\n\n";
-    cout<<"\tint Date.getMonth();\n";
-    cout<<"\t-Devuelve un entero entre 1 y 12.\n\n";
-    cout<<"\tint Date.getYear();\n";
-    cout<<"\t-Devuelve un entero entre 0 y 99.\n\n";
-    cout<<"\tint Date.getFullYear();\n";
-    cout<<"\t-Devuelve un entero mayor o igual a 9.\n\n";
-    cout<<"\tint Date.getSerial();\n";
-    cout<<"\t-Devuelve el número de serie.\n\n";
+    cout<<"\nNo hay documentación. Con leer el código basta para saber qué hace cada cosa. "<<endl<<endl;
+
     return 1;
 }
 

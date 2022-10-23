@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1664145671 source:f:\desktop\proyectos\fechas\main.cpp
+1666561418 source:f:\desktop\proyectos\fechas\main.cpp
 	<iostream>
 	<cstdlib>
 	<cstring>
@@ -8,13 +8,29 @@
 	<locale.h>
 	<time.h>
 	<sstream>
+	<windows.h>
 	"errores.h"
 	"Fecha.h"
 	"Menu.h"
 
-1664145324 f:\desktop\proyectos\fechas\fecha.h
+1666562395 f:\desktop\proyectos\fechas\fecha.h
 
-1663374670 f:\desktop\proyectos\fechas\menu.h
+1666488993 f:\desktop\proyectos\fechas\menu.h
+	"rlutil.h"
 
 1663375830 f:\desktop\proyectos\fechas\errores.h
+
+1654872496 f:\desktop\proyectos\fechas\rlutil.h
+	<iostream>
+	<string>
+	<cstdio>
+	<stdio.h>
+	<string.h>
+	<windows.h>
+	<conio.h>
+	<termios.h>
+	<unistd.h>
+	<sys/ioctl.h>
+	<sys/types.h>
+	<sys/time.h>
 
