@@ -12,10 +12,13 @@ Se puede crear un objeto Date de tres formas:
  ```cpp
     Date miFecha(728611) // Establece la fecha en el 12 de noviembre de 2003 00:00
     Date miFechaConHora(728611, 82200000); // 12-nov-2003 22:50:00.000
+    miFecha = 728611.822 // 12-nov-2003 22:50:00.000
  ```
-  * Pasando 'true' o 'false' como parámetro establece la fecha actual.
+  * Pasando 'true' o 'false' como parámetro establece la fecha actual. Aunque se puede usar el método .now().
 ```cpp
    Date fechaActual(true); // 25-9-2022 20:45:38.000
+   Date algunaFecha;
+   algunaFecha.now();
 ```
 ## Métodos
 ### getDate()
@@ -25,7 +28,7 @@ Se puede crear un objeto Date de tres formas:
    int miFecha.getDate(); // 12
 ```
 ### getMonth()
- Devuelve el mes, como un entero entre 1 y 12.
+ Devuelve el mes, como un entero entre 1 y 12. Acá se diferencia de la clase Date de javascript, que devuelve un entero entre 0 y 11.
  ```cpp
    Date miFecha(12,11,2003);
    int miFecha.getMonth(); // 11
@@ -175,8 +178,19 @@ Se puede crear un objeto Date de tres formas:
   miFecha.happensAfter(otraFecha); // true
   otraFecha.happensAfter(miFecha); // false
 ```
-
-
+### Los métodos .add-()
+ Con los métodos .add-() podés agregar días, meses, años, horas, minutos, segundos y milisegundos a tu objeto Date.
+```cpp
+  Date miFecha(1,1,2000); // Sáb. 1 ene 2000 00:00:00.000
+  miFecha.addDays(2); // Lun. 3 ene 2000 00:00:00.000
+  miFecha.addMonths(2); // Vie. 3 mar 2000 00:00:00.000
+  miFecha.addYears(22); // Jue. 3 mar 2022 00:00:00.000
+  miFecha.addHours(34); // Vie. 4 mar 2022 10:00:00.000
+  miFecha.addMinutes(15); // Vie. 4 mar 2022 10:15:00.000
+  miFecha.addSeconds(20); // Vie. 4 mar 2022 10:15:20.000
+  miFecha.addMilliseconds(800); // Vie. 4 mar 2022 10:15:20.800
+```
+PENDIENTE DE TERMINAR *
 
    
    
